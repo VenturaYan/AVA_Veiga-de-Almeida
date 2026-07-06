@@ -1,0 +1,231 @@
+#include <stdio.h>
+
+#define MAX_VERTICES 100
+#define MAX_EDGES 100
+
+int graph[MAX_VERTICES][MAX_EDGES];
+int num_vertices;
+int num_edges = 0;
+
+/* Inicializa a matriz com zeros */
+void inicializarGrafo()
+{
+    for (int i = 0; i < MAX_VERTICES; i++)
+    {
+        for (int j = 0; j < MAX_EDGES; j++)
+        {
+            graph[i][j] = 0;
+        }
+    }
+}
+
+/* Insere uma aresta */
+void inserirAresta()
+{
+    if (num_edges >= MAX_EDGES)
+    {
+        printf("Limite de arestas atingido!\n");
+        return;
+    }
+
+    int v1, v2;
+
+    printf("Vertice 1: ");
+    scanf("%d", &v1);
+
+    printf("Vertice 2: ");
+    scanf("%d", &v2);
+
+    if (v1 < 0 || v1 >= num_vertices ||
+        v2 < 0 || v2 >= num_vertices)
+    {
+        printf("Vertices invalidos!\n");
+        return;
+    }
+
+    graph[v1][num_edges] = 1;
+    graph[v2][num_edges] = 1;
+
+    printf("Aresta e%d = (%d,%d) inserida.\n",
+           num_edges, v1, v2);
+
+    num_edges++;
+}
+
+/* Exibe a matriz de incidência */
+void mostrarMatriz()
+{
+    printf("\nMATRIZ DE INCIDENCIA\n\n");
+
+    printf("    ");
+    for (int e = 0; e < num_edges; e++)
+    {
+        printf("e%-3d", e);
+    }
+
+    printf("\n");
+
+    for (int v = 0; v < num_vertices; v++)
+    {
+        printf("v%-2d ", v);
+
+        for (int e = 0; e < num_edges; e++)
+        {
+            printf("%-4d", graph[v][e]);
+        }
+
+        printf("\n");
+    }
+}
+
+/* Calcula o grau de um vértice */
+int grauVertice(int v)
+{
+    int grau = 0;
+
+    for (int e = 0; e < num_edges; e++)
+    {
+        if (graph[v][e] == 1)
+        {
+            grau++;
+        }
+    }
+
+    return grau;
+}
+
+/* Mostra o grau de um vértice */
+void mostrarGrauVertice()
+{
+    int v;
+
+    printf("Vertice: ");
+    scanf("%d", &v);
+
+    if (v < 0 || v >= num_vertices)
+    {
+        printf("Vertice invalido!\n");
+        return;
+    }
+
+    printf("Grau(%d) = %d\n", v, grauVertice(v));
+}
+
+/* Mostra os graus de todos os vértices */
+void mostrarTodosGraus()
+{
+    printf("\nGRAUS DOS VERTICES\n");
+
+    for (int v = 0; v < num_vertices; v++)
+    {
+        printf("Grau(%d) = %d\n",
+               v,
+               grauVertice(v));
+    }
+}
+
+/* Lista todas as arestas */
+void listarArestas()
+{
+    printf("\nARESTAS DO GRAFO\n");
+
+    for (int e = 0; e < num_edges; e++)
+    {
+        int v1 = -1;
+        int v2 = -1;
+
+        for (int v = 0; v < num_vertices; v++)
+        {
+            if (graph[v][e] == 1)
+            {
+                if (v1 == -1)
+                {
+                    v1 = v;
+                }
+                else
+                {
+                    v2 = v;
+                }
+            }
+        }
+
+        printf("e%d = (%d,%d)\n", e, v1, v2);
+    }
+}
+
+/* Limpa o grafo */
+void limparGrafo()
+{
+    inicializarGrafo();
+    num_edges = 0;-
+
+    printf("Grafo limpo com sucesso!\n");
+}
+
+/* Programa principal */
+int main()
+{
+    inicializarGrafo();
+
+    printf("Numero de vertices: ");
+    scanf("%d", &num_vertices);
+
+    if (num_vertices <= 0 || num_vertices > MAX_VERTICES)
+    {
+        printf("Quantidade de vertices invalida!\n");
+        return 1;
+    }
+
+    int opcao;
+
+    do
+    {
+        printf("\n=========================\n");
+        printf("   MENU - GRAFO\n");
+        printf("=========================\n");
+        printf("1 - Inserir aresta\n");
+        printf("2 - Mostrar matriz\n");
+        printf("3 - Grau de um vertice\n");
+        printf("4 - Graus de todos os vertices\n");
+        printf("5 - Listar arestas\n");
+        printf("6 - Limpar grafo\n");
+        printf("0 - Sair\n");
+        printf("Opcao: ");
+
+        scanf("%d", &opcao);
+
+        switch (opcao)
+        {
+            case 1:
+                inserirAresta();
+                break;
+
+            case 2:
+                mostrarMatriz();
+                break;
+
+            case 3:
+                mostrarGrauVertice();
+                break;
+
+            case 4:
+                mostrarTodosGraus();
+                break;
+
+            case 5:
+                listarArestas();
+                break;
+
+            case 6:
+                limparGrafo();
+                break;
+
+            case 0:
+                printf("Programa encerrado.\n");
+                break;
+
+            default:
+                printf("Opcao invalida!\n");
+        }
+
+    } while (opcao != 0);
